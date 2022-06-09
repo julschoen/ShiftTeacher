@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from torch.cuda.amp import autocast, GradScaler
 
 from model import LeNetShiftTeacher, ResNetShiftTeacher
+from biggan import Discriminator as BigShiftTeacher
 
 
 class Trainer(object):
@@ -32,6 +33,8 @@ class Trainer(object):
         ### Make Models ###
         if self.p.res_net:
             self.model = ResNetShiftTeacher(self.p).to(self.device)
+        elif self.p.biggan:
+            self.model = BigShiftTeacher(self.p).to(self.device)
         else:
             self.model = LeNetShiftTeacher(self.p).to(self.device)
         
