@@ -15,7 +15,7 @@ class DATA(Dataset):
       xs = x[ind]
       y = (ind[1]-ind[0])/(x.shape[0]-ind[0])
       xs = np.clip(xs, -1, 1)
-      return torch.from_numpy(xs).float().squeeze(), torch.Tensor(y)
+      return torch.from_numpy(xs).float().squeeze(), torch.Tensor([y])
 
   def __len__(self):
       return self.len
