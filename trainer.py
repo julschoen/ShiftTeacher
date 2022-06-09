@@ -88,14 +88,14 @@ class Trainer(object):
 
     def log(self, step):
         if step % self.p.steps_per_log == 0:
-            print('[%d/%d] Loss: %.2f, Val Loss'
+            print('[%d/%d] Loss: %.2f, Val Loss %.2f'
                         % (step, self.p.niters, self.losses[-1], self.val_losses[-1]))
 
         if step % self.p.steps_per_checkpoint == 0:
             self.save_checkpoint(step)
 
     def log_final(self, step):
-        print('[%d/%d] Loss: %.2f, Val Loss'
+        print('[%d/%d] Loss: %.2f, Val Loss %.2f'
                         % (step, self.p.niters, self.losses[-1], self.val_losses[-1]))
         self.save_checkpoint(step)
 
