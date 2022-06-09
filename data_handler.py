@@ -11,11 +11,11 @@ class DATA(Dataset):
 
   def __getitem__(self, index):
       x = self.files[index]
-      ind = np.sort(np.random.choice(x.shape[0], 3, replace=False))
+      ind = np.sort(np.random.choice(x.shape[0], 2, replace=False))
       xs = x[ind]
-      xs = ((xs)/255)*2-1
+      y = (ind[1]-ind[0])/(x.shape[0]-ind[0])
       xs = np.clip(xs, -1, 1)
-      return torch.from_numpy(xs).float().squeeze(), torch.Tensor(ind)
+      return torch.from_numpy(xs).float().squeeze(), torch.Tensor(y)
 
   def __len__(self):
       return self.len
