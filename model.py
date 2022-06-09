@@ -32,7 +32,7 @@ class LeNetShiftTeacher(nn.Module):
 
     def forward(self, x):
         batch_size = x.shape[0]
-        features = self.convnet(x, dim=1))
+        features = self.convnet(x)
 
         features = features.mean(dim=[-1, -2])
         features = features.view(batch_size, -1)
