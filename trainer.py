@@ -94,7 +94,8 @@ class Trainer(object):
             self.save_checkpoint(step)
 
     def log_final(self, step):
-        self.log(step)
+        print('[%d/%d] Loss: %.2f, Val Loss'
+                        % (step, self.p.niters, self.losses[-1], self.val_losses[-1]))
         self.save_checkpoint(step)
 
     def step(self)
@@ -116,6 +117,10 @@ class Trainer(object):
             p.requires_grad = False
 
         return loss.item()
+
+    def val_step(self):
+        # TBD
+        return 0
 
     def train(self):
         step_done = self.start_from_checkpoint()
