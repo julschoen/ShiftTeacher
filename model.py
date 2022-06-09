@@ -63,7 +63,7 @@ class ResNetShiftTeacher(nn.Module):
     def forward(self, x):
         batch_size = x.shape[0]
    
-        self.features_extractor(x, dim=1))
+        self.features_extractor(x)
         features = self.features.output.view([batch_size, -1])
 
         return self.act(self.shift_estimator(features)).squeeze()
