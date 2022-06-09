@@ -106,7 +106,7 @@ class Trainer(object):
         data, shifts = next(self.gen)
         self.model.zero_grad()
         with autocast():
-            pred = self.model(data[:,0], data[:,1])
+            pred = self.model(data[:,0].unsqueeze(1), data[:,1].unsqueeze(1))
 
         loss = torch.mean(torch.abs(shift_prediction - shifts))
 
