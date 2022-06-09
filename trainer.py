@@ -13,7 +13,7 @@ from biggan import Discriminator as BigShiftTeacher
 
 
 class Trainer(object):
-    def __init__(self, dataset, params):
+    def __init__(self, dataset, val, params):
         ### Misc ###
         self.p = params
         self.device = params.device
@@ -47,6 +47,7 @@ class Trainer(object):
 
         ### Make Data Generator ###
         self.generator_train = DataLoader(dataset, batch_size=self.p.batch_size, shuffle=True, num_workers=4, drop_last=True)
+        self.generator_val = DataLoader(val, batch_size=val.__len__(), shuffle=True, num_workers=4)
         self.gen = self.inf_train_gen()
 
         ### Prep Training
@@ -127,8 +128,13 @@ class Trainer(object):
         return loss.item()
 
     def val_step(self):
-        # TBD
-        return 0
+        with torch.no_grad():
+            data, shifts = next(iter(self.generator_val))
+            data, shifts = data.to(self.p.device), shifts.to(self.p.device)
+            with autocast():
+                pred = self.model(data)
+            loss = torch.log(torch.mean(torch.abs(pred - shifts)))
+        return loss.item()
 
     def train(self):
         step_done = self.start_from_checkpoint()
