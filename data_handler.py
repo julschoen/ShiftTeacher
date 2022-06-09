@@ -14,7 +14,7 @@ class DATA(Dataset):
       ind = np.sort(np.random.choice(x.shape[0], 2, replace=False))
       while ind[0]+1 == ind[1]:
         ind = np.sort(np.random.choice(x.shape[0], 2, replace=False))
-      ind = np.sort(np.append(ind, ind[0]+ind[1]//2))
+      ind = np.sort(np.append(ind, (ind[0]+ind[1]//2)))
       xs = x[ind]
       y = (ind[2]-ind[0])/(x.shape[0]-ind[0])
       xs = np.clip(xs, -1, 1)
