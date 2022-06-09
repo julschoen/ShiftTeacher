@@ -41,6 +41,7 @@ class Trainer(object):
 
         ### Make Data Generator ###
         self.generator_train = DataLoader(dataset, batch_size=self.p.batch_size, shuffle=True, num_workers=4, drop_last=True)
+        self.gen = self.inf_train_gen()
 
         ### Prep Training
         self.losses = []
@@ -102,7 +103,7 @@ class Trainer(object):
         for p in self.model.parameters():
                     p.requires_grad = True
             
-        data, shifts = next(gen)
+        data, shifts = next(self.gen)
         self.model.zero_grad()
         with autocast():
             pred = self.model(data)
@@ -124,7 +125,6 @@ class Trainer(object):
 
     def train(self):
         step_done = self.start_from_checkpoint()
-        gen = self.inf_train_gen()
 
         print("Starting Training...")
         for i in range(step_done, self.p.niters):
