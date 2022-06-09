@@ -8,7 +8,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.cuda.amp import autocast, GradScaler
 
-from model import ShiftTeacher
+from model import LeNetShiftTeacher, ResNetShiftTeacher
 
 
 class Trainer(object):
@@ -30,7 +30,10 @@ class Trainer(object):
                 pickle.dump(params, file)
 
         ### Make Models ###
-        self.model = ShiftTeacher(self.p).to(self.device)
+        if self.p.res_net:
+            self.model = ResNetShiftTeacher(self.p).to(self.device)
+        else:
+            self.model = LeNetShiftTeacher(self.p).to(self.device)
         
         if self.p.ngpu>1:
             self.model = nn.DataParallel(self.model)
