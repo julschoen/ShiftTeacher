@@ -109,7 +109,7 @@ class Trainer(object):
         with autocast():
             pred = self.model(data[:,0].unsqueeze(1), data[:,1].unsqueeze(1))
 
-        loss = torch.mean(torch.abs(pred - shifts))
+        loss = torch.mean(torch.abs(pred - shifts)) * 10
 
         self.grad_scaler.scale(loss).backward()
         self.grad_scaler.step(self.opt)
