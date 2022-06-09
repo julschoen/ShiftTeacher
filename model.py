@@ -24,7 +24,7 @@ class ShiftTeacher(nn.Module):
             nn.Linear(60 * width, 42 * width),
             nn.BatchNorm1d(42 * width),
             nn.ReLU(),
-            nn.Linear(42 * width, 1)
+            nn.Linear(42 * width, 1),
             nn.Sigmoid()
         )
 
