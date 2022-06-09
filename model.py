@@ -9,7 +9,7 @@ class LeNetShiftTeacher(nn.Module):
         super(LeNetShiftTeacher, self).__init__()
         width = params.filters
         self.convnet = nn.Sequential(
-            nn.Conv2d(1 * 2, 3 * width, kernel_size=(5, 5)),
+            nn.Conv2d(3, 3 * width, kernel_size=(5, 5)),
             nn.BatchNorm2d(3 * width),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(2, 2), stride=2),
@@ -30,9 +30,9 @@ class LeNetShiftTeacher(nn.Module):
             nn.Sigmoid()
         )
 
-    def forward(self, x1, x2):
-        batch_size = x1.shape[0]
-        features = self.convnet(torch.cat([x1, x2], dim=1))
+    def forward(self, x):
+        batch_size = x.shape[0]
+        features = self.convnet(x, dim=1))
 
         features = features.mean(dim=[-1, -2])
         features = features.view(batch_size, -1)
@@ -49,7 +49,7 @@ class ResNetShiftTeacher(nn.Module):
         super(ResNetShiftTeacher, self).__init__()
         self.features_extractor = resnet18(pretrained=False)
         self.features_extractor.conv1 = nn.Conv2d(
-            2, 64,kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+            3, 64,kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         nn.init.kaiming_normal_(self.features_extractor.conv1.weight,
                                 mode='fan_out', nonlinearity='relu')
 
@@ -60,10 +60,10 @@ class ResNetShiftTeacher(nn.Module):
         self.shift_estimator = nn.Linear(512, 1)
         self.act = nn.Sigmoid()
 
-    def forward(self, x1, x2):
-        batch_size = x1.shape[0]
+    def forward(self, x):
+        batch_size = x.shape[0]
    
-        self.features_extractor(torch.cat([x1, x2], dim=1))
+        self.features_extractor(x, dim=1))
         features = self.features.output.view([batch_size, -1])
 
         return self.act(self.shift_estimator(features)).squeeze()
