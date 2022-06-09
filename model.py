@@ -4,7 +4,7 @@ import torch.nn as nn
 
 class ShiftTeacher(nn.Module):
     def __init__(self, params):
-        super(LeNetShiftPredictor, self).__init__()
+        super(ShiftTeacher, self).__init__()
         width = params.filters
         self.convnet = nn.Sequential(
             nn.Conv2d(1 * 2, 3 * width, kernel_size=(5, 5)),
