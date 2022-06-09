@@ -98,7 +98,7 @@ class Trainer(object):
                         % (step, self.p.niters, self.losses[-1], self.val_losses[-1]))
         self.save_checkpoint(step)
 
-    def step(self)
+    def step(self):
         for p in self.model.parameters():
                     p.requires_grad = True
             
