@@ -25,6 +25,7 @@ class ShiftTeacher(nn.Module):
             nn.BatchNorm1d(42 * width),
             nn.ReLU(),
             nn.Linear(42 * width, 1)
+            nn.Sigmoid()
         )
 
     def forward(self, x1, x2):
