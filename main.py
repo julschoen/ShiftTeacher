@@ -9,8 +9,8 @@ def main():
 	parser.add_argument('--batch_size', type=int, default=512, help='Batch size')
 	parser.add_argument('--filters', type=int, default=32, help='Number of filters')
 	parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate imG')
-	parser.add_argument('--data_path', type=str, default='golf.npz',help='Path to data.')
-	parser.add_argument('--val_data_path', type=str, default='golf.npz',help='Path to val data.')
+	parser.add_argument('--data_path', type=str, default='golf_train.npz',help='Path to data.')
+	parser.add_argument('--val_data_path', type=str, default='golf_val.npz',help='Path to val data.')
 	parser.add_argument('--ngpu', type=int, default=2, help='Number of GPUs')
 	parser.add_argument('--steps_per_log', type=int, default=100, help='Output Iterations')
 	parser.add_argument('--steps_per_checkpoint', type=int, default=1000, help='Checkpoint Save Iterations')
@@ -22,8 +22,9 @@ def main():
 	params = parser.parse_args()
 	print(params)
 	dataset_train = DATA(path=params.data_path)
+	dataset_val = DATA(path=params.val_data_path)
 
-	trainer = Trainer(dataset_train, params=params)
+	trainer = Trainer(dataset_train, dataset_val, params=params)
 	trainer.train()
 
 if __name__ == '__main__':
