@@ -51,7 +51,7 @@ class Trainer(object):
         self.gen = self.inf_train_gen()
 
         ### Prep Training
-        self.bce = nn.BCELoss()
+        self.bce = nn.BCEWithLogitsLoss()
         self.losses = []
         self.val_losses = []
 
@@ -125,7 +125,7 @@ class Trainer(object):
             shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
             cl_loss = self.bce(y_pred, y)
             loss = shift_loss + cl_loss
-        
+
         self.grad_scaler.scale(loss).backward()
         self.grad_scaler.step(self.opt)
         self.grad_scaler.update()
