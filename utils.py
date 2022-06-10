@@ -18,7 +18,7 @@ def snlinear(in_features, out_features):
 
 class Attention2D(nn.Module):
   def __init__(self, in_dim):
-      super(Attention, self).__init__()
+      super(Attention2D, self).__init__()
       self.chanel_in = in_dim
 
       self.query_conv = snconv2d(in_channels=in_dim, out_channels=in_dim//8, kernel_size=1, padding=0, bias=False)
@@ -46,7 +46,7 @@ class Attention2D(nn.Module):
 
 class Attention3D(nn.Module):
   def __init__(self, ch):
-    super(Attention, self).__init__()
+    super(Attention3D, self).__init__()
     # Channel multiplier
     self.ch = ch
     self.theta = snconv3d(self.ch, self.ch // 8, kernel_size=1, padding=0, bias=False)
