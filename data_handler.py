@@ -24,6 +24,7 @@ class DATA(Dataset):
       x1 = self.files[index]
       x2 = self.files[np.random.choice(self.len, 1)]
       num_others = np.random.randint(1,3)
+      print(x1.shape)
       ind1 = np.sort(np.random.choice(x1.shape[0], 2, replace=False))
       print(x2.shape, num_others)
       ind2 = np.sort(np.random.choice(x2.shape[0], num_others, replace=False))
