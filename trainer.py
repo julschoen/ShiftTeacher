@@ -41,7 +41,7 @@ class Trainer(object):
         if self.p.ngpu>1:
             self.model = nn.DataParallel(self.model)
 
-        self.opt = optim.Adam(self.model.parameters(), lr=self.p.lr)
+        self.opt = optim.Adam(self.model.parameters(), lr=self.p.lr, weight_decay=1e-5)
         
         self.grad_scaler = GradScaler()
 
