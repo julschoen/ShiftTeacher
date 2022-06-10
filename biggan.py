@@ -9,12 +9,22 @@ class Discriminator(nn.Module):
     super(Discriminator, self).__init__()
     self.p = params
     # Architecture
-    self.arch = {'in_channels' :  [item * self.p.filters for item in [1, 2, 4,  8, 16]],
-               'out_channels' : [item * self.p.filters for item in [2, 4, 8, 16, 16]],
-               'downsample' : [True] * 5 + [False],
-               'resolution' : [64, 32, 16, 8, 4, 4],
+    if self.p.in_shape == 128:
+      self.arch = {'in_channels' :  [item * self.p.filters for item in [1, 2, 4,  8, 16]],
+                 'out_channels' : [item * self.p.filters for item in [2, 4, 8, 16, 16]],
+                 'downsample' : [True] * 5 + [False],
+                 'resolution' : [64, 32, 16, 8, 4, 4],
+                 'attention' : {2**i: 2**i in [int(item) for item in '16'.split('_')]
+                                for i in range(2,8)}}
+    elif self.p.in_shape == 64:
+      self.arch = {'in_channels' :  [item * self.p.filters for item in [1, 2, 4, 8]],
+               'out_channels' : [item * self.p.filters for item in [2, 4, 8, 16]],
+               'downsample' : [True] * 4 + [False],
+               'resolution' : [32, 16, 8, 4, 4],
                'attention' : {2**i: 2**i in [int(item) for item in '16'.split('_')]
-                              for i in range(2,8)}}
+                              for i in range(2,7)}}
+    else:
+      raise NotImplementedError
     
     # Prepare model
     if self.p.threeD:
