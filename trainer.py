@@ -62,8 +62,8 @@ class Trainer(object):
 
     def start_from_checkpoint(self):
         step = 0
-        files = [f for f in os.listdir(self.log_dir)]
-        if len(files) < 3:
+        files = [f for f in os.listdir(self.log_dir) if f.endswith('.pt')]
+        if len(files) < 2:
             checkpoint = os.path.join(self.log_dir, 'checkpoint.pt')
         else:
             files.remove('checkpoint.pt')
