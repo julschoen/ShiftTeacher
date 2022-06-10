@@ -26,9 +26,9 @@ class DATA(Dataset):
       num_others = np.random.randint(1,3)
       ind1 = np.sort(np.random.choice(x1.shape[0], 2, replace=False))
       ind2 = np.sort(np.random.choice(x2.shape[0], num_others, replace=False))
-      while ind[0]+1 == ind[1]:
-        ind = np.sort(np.random.choice(x1.shape[0], 2, replace=False))
-      ind = np.sort(np.append(ind, np.mean(ind).astype(int)))
+      while ind1[0]+1 == ind1[1]:
+        ind1 = np.sort(np.random.choice(x1.shape[0], 2, replace=False))
+      ind1 = np.sort(np.append(ind1, np.mean(ind1).astype(int)))
       xs = x1[ind1]
       xs[np.random.choice(xs.shape[0], num_others, replace=False)] = x2[ind2]
       shift = (ind1[2]-ind1[0])/(x1.shape[0]-ind1[0])
