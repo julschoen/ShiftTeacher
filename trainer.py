@@ -51,6 +51,7 @@ class Trainer(object):
         self.gen = self.inf_train_gen()
 
         ### Prep Training
+        self.bce = nn.BCELoss()
         self.losses = []
         self.val_losses = []
 
@@ -95,29 +96,35 @@ class Trainer(object):
 
     def log(self, step):
         if step % self.p.steps_per_log == 0:
-            print('[%d/%d] Loss: %.2f, Val Loss %.2f'
-                        % (step, self.p.niters, self.losses[-1], self.val_losses[-1]))
+            shift, cl = self.losses[-1]
+            val_shift, val_cl = self.val_losses[-1]
+            print('[%d/%d] Shift Loss: %.2f, Class Loss: %.2f, Val Shift: %.2f, Val Class %.2f'
+                        % (step, self.p.niters, shift, cl, val_shift, val_cl))
 
         if step % self.p.steps_per_checkpoint == 0:
             self.save_checkpoint(step)
 
     def log_final(self, step):
-        print('[%d/%d] Loss: %.2f, Val Loss %.2f'
-                        % (step, self.p.niters, self.losses[-1], self.val_losses[-1]))
+        shift, cl = self.losses[-1]
+        val_shift, val_cl = self.val_losses[-1]
+        print('[%d/%d] Shift Loss: %.2f, Class Loss: %.2f, Val Shift: %.2f, Val Class %.2f'
+                    % (step, self.p.niters, shift, cl, val_shift, val_cl))
         self.save_checkpoint(step)
 
     def step(self):
         for p in self.model.parameters():
                     p.requires_grad = True
             
-        data, shifts = next(self.gen)
-        data, shifts = data.to(self.p.device), shifts.to(self.p.device)
+        data, shifts, y = next(self.gen)
+        data, shifts, y = data.to(self.p.device), shifts.to(self.p.device), y.to(self.p.device)
         self.model.zero_grad()
         with autocast():
-            pred = self.model(data)
+            shift_pred, y_pred = self.model(data)
 
-        loss = torch.log(torch.mean(torch.abs(pred - shifts)))
+        shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
+        cl_loss = self.bce(y_pred, y)
 
+        loss = shift_loss + cl_loss
         self.grad_scaler.scale(loss).backward()
         self.grad_scaler.step(self.opt)
         self.grad_scaler.update()
@@ -125,16 +132,19 @@ class Trainer(object):
         for p in self.model.parameters():
             p.requires_grad = False
 
-        return loss.item()
+        return shift_loss.item(), cl_loss
 
     def val_step(self):
         with torch.no_grad():
-            data, shifts = next(iter(self.generator_val))
-            data, shifts = data.to(self.p.device), shifts.to(self.p.device)
+            data, shifts, y = next(iter(self.generator_val))
+            data, shifts, y = data.to(self.p.device), shifts.to(self.p.device), y.to(self.p.device)
             with autocast():
-                pred = self.model(data)
-            loss = torch.log(torch.mean(torch.abs(pred - shifts)))
-        return loss.item()
+                shift_pred, y_pred = self.model(data)
+
+            shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
+            cl_loss = self.bce(y_pred, y)
+
+        return shift_loss.item(), cl_loss.item()
 
     def train(self):
         step_done = self.start_from_checkpoint()
