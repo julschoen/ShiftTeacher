@@ -121,11 +121,11 @@ class Trainer(object):
         with autocast():
             shift_pred, y_pred = self.model(data)
 
-        shifts, shift_pred = shifts[y == 1], shift_pred[y == 1]
-        shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
-        cl_loss = self.bce(y_pred, y)
-
-        loss = shift_loss + cl_loss
+            shifts, shift_pred = shifts[y == 1], shift_pred[y == 1]
+            shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
+            cl_loss = self.bce(y_pred, y)
+            loss = shift_loss + cl_loss
+        
         self.grad_scaler.scale(loss).backward()
         self.grad_scaler.step(self.opt)
         self.grad_scaler.update()
@@ -142,9 +142,9 @@ class Trainer(object):
             with autocast():
                 shift_pred, y_pred = self.model(data)
 
-            shifts, shift_pred = shifts[y == 1], shift_pred[y == 1]
-            shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
-            cl_loss = self.bce(y_pred, y)
+                shifts, shift_pred = shifts[y == 1], shift_pred[y == 1]
+                shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
+                cl_loss = self.bce(y_pred, y)
 
         return shift_loss.item(), cl_loss.item()
 
