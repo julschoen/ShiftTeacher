@@ -34,7 +34,7 @@ class DATA(Dataset):
       shift = (ind1[2]-ind1[0])/(x1.shape[0]-ind1[0])
       xs = np.clip(xs, -1, 1)
       same = 0
-    return torch.from_numpy(xs).float().squeeze(), torch.Tensor([y]).float(), torch.Tensor([same]).float()
+    return torch.from_numpy(xs).float().squeeze(), torch.Tensor([shift]).float(), torch.Tensor([same]).float()
 
   def __len__(self):
       return self.len
