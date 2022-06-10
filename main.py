@@ -20,7 +20,7 @@ def main():
 	parser.add_argument('--res_net', type=bool, default=False, help='Use ResNet18')
 	parser.add_argument('--biggan', type=bool, default=False, help='Use BigGAN')
 	parser.add_argument('--threeD', type=bool, default=False, help='3D Data')
-	parser.add_argument('--data_size', type=int, default=128, help='Shape of input data')
+	parser.add_argument('--in_shape', type=int, default=128, help='Shape of input data')
 	params = parser.parse_args()
 	print(params)
 	if params.threeD:
