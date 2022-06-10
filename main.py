@@ -1,4 +1,4 @@
-from data_handler import DATA
+from data_handler import DATA, DATA3D
 from trainer import Trainer
 import argparse
 
@@ -22,8 +22,12 @@ def main():
 	parser.add_argument('--threeD', type=bool, default=False, help='3D Data')
 	params = parser.parse_args()
 	print(params)
-	dataset_train = DATA(path=params.data_path)
-	dataset_val = DATA(path=params.val_data_path)
+	if params.threeD:
+		dataset_train = DATA3D(path=params.data_path)
+		dataset_val = DATA3D(path=params.val_data_path)
+	else:
+		dataset_train = DATA(path=params.data_path)
+		dataset_val = DATA(path=params.val_data_path)
 
 	trainer = Trainer(dataset_train, dataset_val, params=params)
 	trainer.train()
