@@ -1,7 +1,7 @@
 import torch 
 import torch.nn as nn
 from torch.nn import init
-from utils import Attention, DBlock, snconv3d, snlinear
+from utils import Attention2D, Attention3D, DBlock, snconv2d, snconv3d, snlinear
 
 
 class Discriminator(nn.Module):
@@ -17,17 +17,27 @@ class Discriminator(nn.Module):
                               for i in range(2,8)}}
     
     # Prepare model
-    self.input_conv = snconv3d(3, self.arch['in_channels'][0])
+    if self.p.threeD:
+      self.input_conv = snconv3d(3, self.arch['in_channels'][0])
+      conv = snconv3d
+      att = Attention3D
+      down = nn.AvgPool3d(2)
+    else:
+      self.input_conv = snconv2d(3, self.arch['in_channels'][0])
+      conv = snconv2d
+      att = Attention2D
+      down = nn.AvgPool2d(2)
 
     self.blocks = []
     for index in range(len(self.arch['out_channels'])):
       self.blocks += [[DBlock(in_channels=self.arch['in_channels'][index] if d_index==0 else self.arch['out_channels'][index],
                        out_channels=self.arch['out_channels'][index],
+                       conv=conv,
                        preactivation=True,
-                       downsample=(nn.AvgPool2d(2) if self.arch['downsample'][index] and d_index==0 else None))
+                       downsample=(down if self.arch['downsample'][index] and d_index==0 else None))
                        for d_index in range(1)]]
       if self.arch['attention'][self.arch['resolution'][index]]:
-        self.blocks[-1] += [Attention(self.arch['out_channels'][index])]
+        self.blocks[-1] += [att(self.arch['out_channels'][index])]
 
     self.blocks = nn.ModuleList([nn.ModuleList(block) for block in self.blocks])
     self.linear_shift = snlinear(self.arch['out_channels'][-1], 1)
@@ -54,5 +64,8 @@ class Discriminator(nn.Module):
       for block in blocklist:
         h = block(h)
     # Apply global sum pooling as in SN-GAN
-    h = torch.sum(self.activation(h), [2, 3])
+    if self.p.threeD:
+      h = torch.sum(self.activation(h), [2, 3, 4])
+    else:
+      h = torch.sum(self.activation(h), [2, 3])
     return self.act(self.linear_shift(h)), self.linear_dir(h)
