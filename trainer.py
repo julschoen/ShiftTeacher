@@ -121,7 +121,7 @@ class Trainer(object):
         with autocast():
             shift_pred, y_pred = self.model(data)
 
-        shifts, shift_pred = shifts[y == 1], shifts_pred[y == 1]
+        shifts, shift_pred = shifts[y == 1], shift_pred[y == 1]
         shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
         cl_loss = self.bce(y_pred, y)
 
@@ -142,7 +142,7 @@ class Trainer(object):
             with autocast():
                 shift_pred, y_pred = self.model(data)
 
-            shifts, shift_pred = shifts[y == 1], shifts_pred[y == 1]
+            shifts, shift_pred = shifts[y == 1], shift_pred[y == 1]
             shift_loss = torch.log(torch.mean(torch.abs(shift_pred - shifts)))
             cl_loss = self.bce(y_pred, y)
 
