@@ -14,7 +14,7 @@ class Discriminator(nn.Module):
                  'out_channels' : [item * self.p.filters for item in [2, 4, 8, 16, 16]],
                  'downsample' : [True] * 5 + [False],
                  'resolution' : [64, 32, 16, 8, 4, 4],
-                 'attention' : {2**i: 2**i in [int(item) for item in '16'.split('_')]
+                 'attention' : {2**i: 2**i in [int(item) for item in '32'.split('_')]
                                 for i in range(2,8)}}
     elif self.p.in_shape == 64:
       self.arch = {'in_channels' :  [item * self.p.filters for item in [1, 2, 4, 8]],
