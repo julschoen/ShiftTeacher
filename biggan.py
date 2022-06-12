@@ -78,4 +78,4 @@ class Discriminator(nn.Module):
       h = torch.sum(self.activation(h), [2, 3, 4])
     else:
       h = torch.sum(self.activation(h), [2, 3])
-    return self.linear_shift(h), self.linear_dir(h)
+    return self.act(self.linear_shift(h)), self.linear_dir(h)
