@@ -17,7 +17,7 @@ class DATA(Dataset):
         ind = np.sort(np.random.choice(x.shape[0], 2, replace=False))
       ind = np.sort(np.append(ind, np.mean(ind).astype(int)))
       xs = x[ind]
-      shift = ind[2]-ind[0]/140
+      shift = (ind[2]-ind[0])/140
       xs = np.clip(xs, -1, 1)
       same = 1
     else:
@@ -31,7 +31,7 @@ class DATA(Dataset):
       ind1 = np.sort(np.append(ind1, np.mean(ind1).astype(int)))
       xs = x1[ind1]
       xs[np.random.choice(xs.shape[0], num_others, replace=False)] = x2[ind2]
-      shift = ind1[2]-ind1[0]/140
+      shift = (ind1[2]-ind1[0])/140
       xs = np.clip(xs, -1, 1)
       same = 0
     return torch.from_numpy(xs).float().squeeze(), torch.Tensor([shift]).float(), torch.Tensor([same]).float()
@@ -54,7 +54,7 @@ class DATA3D(Dataset):
           ind = np.sort(np.random.choice(x.shape[0], 2, replace=False))
         ind = np.sort(np.append(ind, np.mean(ind).astype(int)))
         xs = x[ind]
-        shift = ind[2]-ind[0]/40
+        shift = (ind[2]-ind[0])/40
         same = 1
       else:
         pat1 = [os.path.join(self.path, self.files[index], f) for f in os.listdir(os.path.join(self.path, self.files[index])) if f.endswith('npz')][0]
@@ -70,7 +70,7 @@ class DATA3D(Dataset):
         ind1 = np.sort(np.append(ind1, np.mean(ind1).astype(int)))
         xs = x1[ind1]
         xs[np.random.choice(xs.shape[0], num_others, replace=False)] = x2[ind2]
-        shift = ind1[2]-ind1[0]/40
+        shift = (ind1[2]-ind1[0])/40
         same = 0
       xs_ = np.empty((3,64,128,128))
       for i, x in enumerate(xs):
