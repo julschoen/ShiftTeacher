@@ -31,7 +31,7 @@ class DATA(Dataset):
       ind1 = np.sort(np.append(ind1, np.mean(ind1).astype(int)))
       xs = x1[ind1]
       xs[np.random.choice(xs.shape[0], num_others, replace=False)] = x2[ind2]
-      shift = (ind1[2]-ind1[0])/140
+      shift = (ind1[2]-ind1[0])  /140
       xs = np.clip(xs, -1, 1)
       same = 0
     return torch.from_numpy(xs).float().squeeze(), torch.Tensor([shift]).float(), torch.Tensor([same]).float()
