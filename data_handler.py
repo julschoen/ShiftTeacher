@@ -48,7 +48,7 @@ class DATA3D(Dataset):
   def __getitem__(self, index):
       if np.random.rand() < 0.51:
         #pat = [os.path.join(self.path, self.files[index], f) for f in os.listdir(os.path.join(self.path, self.files[index])) if f.endswith('npz')][0]
-        pat = [os.path.join(self.path, self.files[index])]
+        pat = os.path.join(self.path, self.files[index])
         x = np.load(pat)['x']
         if x.shape[0] < 6:
           shape = x.shape[0]
